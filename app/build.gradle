@@ -57,13 +57,6 @@ android {
         versionName "$application.versionName"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file("local.properties").newDataInputStream())
-
-        buildConfigField("String", "PRIVATE_KEY", properties.getProperty("privateKey", ""))
-        buildConfigField("String", "PUBLIC_KEY", properties.getProperty("publicKey", ""))
-        buildConfigField("String", "TS", properties.getProperty("ts", ""))
     }
 
     dataBinding {
