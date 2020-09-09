@@ -1,0 +1,128 @@
+//apply plugin: 'com.android.application'
+//apply plugin: 'kotlin-android'
+//apply plugin: 'kotlin-android-extensions'
+//
+//android {
+//    compileSdkVersion 30
+//    buildToolsVersion "30.0.2"
+//
+//    defaultConfig {
+//        applicationId "com.example.githubrepositories"
+//        minSdkVersion 21
+//        targetSdkVersion 30
+//        versionCode 1
+//        versionName "1.0"
+//
+//        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+//    }
+//
+//    buildTypes {
+//        release {
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//        }
+//    }
+//}
+//
+//dependencies {
+//    implementation fileTree(dir: "libs", include: ["*.jar"])
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+//    implementation 'androidx.core:core-ktx:1.3.1'
+//    implementation 'androidx.appcompat:appcompat:1.2.0'
+//    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+//    testImplementation 'junit:junit:4.12'
+//    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+//
+//}
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+HashMap<String, String> baseDependencies = rootProject.ext.dependencies
+HashMap<String, String> testDependencies = rootProject.ext.testDependencies
+HashMap<String, String> application = rootProject.ext.application
+HashMap<String, String> versions = rootProject.ext.versions
+
+android {
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
+    defaultConfig {
+        applicationId application.applicationId
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode application.versionCode
+        versionName "$application.versionName"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+        buildConfigField("String", "PRIVATE_KEY", properties.getProperty("privateKey", ""))
+        buildConfigField("String", "PUBLIC_KEY", properties.getProperty("publicKey", ""))
+        buildConfigField("String", "TS", properties.getProperty("ts", ""))
+    }
+
+    dataBinding {
+        enabled true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation baseDependencies.kotlin_std_lib
+    implementation baseDependencies.coroutines_core
+    implementation baseDependencies.coroutines
+    implementation baseDependencies.coroutines_adapter
+    implementation baseDependencies.core
+
+    implementation baseDependencies.app_compat
+    implementation baseDependencies.card_view
+    implementation baseDependencies.support_design
+    implementation baseDependencies.recycler_view
+    implementation baseDependencies.constraint_layout
+
+    implementation baseDependencies.dagger2
+    implementation baseDependencies.dagger2_android_support
+    kapt baseDependencies.dagger2_compiler
+    kapt baseDependencies.dagger2_android_processor
+
+    implementation baseDependencies.okHttp_interceptor
+    implementation baseDependencies.gson
+    implementation baseDependencies.retrofit_converter_gson
+
+    implementation baseDependencies.multidex
+
+    implementation baseDependencies.arch_lifecycle_extensions
+
+    implementation baseDependencies.multi_state_layout
+    implementation baseDependencies.picasso
+    implementation baseDependencies.palette
+    implementation baseDependencies.circle_image_view
+    implementation baseDependencies.view_pager2
+
+    kapt baseDependencies.arch_lifecycle_compiler
+    kapt baseDependencies.data_binding
+
+    testImplementation testDependencies.junit
+    testImplementation testDependencies.mockito
+    testImplementation testDependencies.coroutines_test
+    testImplementation testDependencies.arch_components_test
+    testImplementation testDependencies.livedata_test
+    testImplementation testDependencies.mockito_kotlin
+
+    androidTestImplementation testDependencies.extJUnit
+    androidTestImplementation testDependencies.espresso
+}
