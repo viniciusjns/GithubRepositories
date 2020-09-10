@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="repo"
+            type="com.example.githubrepositories.model.Repo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/itemRepo_imgAvatar_iv"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{repo.owner.avatarUrl}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/itemRepo_repoName_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="18sp"
+            android:text="@{repo.name}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/itemRepo_imgAvatar_iv"
+            tools:text="Repo name"/>
+
+        <TextView
+            android:id="@+id/itemRepo_repoOwnerName_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="14sp"
+            android:text="@{repo.owner.login}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/itemRepo_imgAvatar_iv"
+            app:layout_constraintTop_toBottomOf="@+id/itemRepo_repoName_tv"
+            tools:text="Owner name"/>
+
+        <ImageView
+            android:id="@+id/itemRepo_icStar_iv"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@+id/itemRepo_imgAvatar_iv"
+            app:layout_constraintTop_toBottomOf="@+id/itemRepo_repoOwnerName_tv"
+            app:srcCompat="@drawable/ic_star" />
+
+        <TextView
+            android:id="@+id/itemRepo_starsCount_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{String.valueOf(repo.stars)}"
+            app:layout_constraintTop_toTopOf="@+id/itemRepo_icStar_iv"
+            app:layout_constraintBottom_toBottomOf="@+id/itemRepo_icStar_iv"
+            app:layout_constraintStart_toEndOf="@+id/itemRepo_icStar_iv"
+            tools:text="10500" />
+
+        <ImageView
+            android:id="@+id/itemRepo_icFork_iv"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="3dp"
+            android:layout_marginStart="16dp"
+            android:scaleType="fitXY"
+            app:layout_constraintStart_toEndOf="@+id/itemRepo_starsCount_tv"
+            app:layout_constraintTop_toTopOf="@+id/itemRepo_icStar_iv"
+            app:layout_constraintBottom_toBottomOf="@+id/itemRepo_icStar_iv"
+            app:srcCompat="@drawable/ic_fork" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{String.valueOf(repo.forks)}"
+            app:layout_constraintTop_toTopOf="@+id/itemRepo_icFork_iv"
+            app:layout_constraintBottom_toBottomOf="@+id/itemRepo_icFork_iv"
+            app:layout_constraintStart_toEndOf="@+id/itemRepo_icFork_iv"
+            tools:text="100" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

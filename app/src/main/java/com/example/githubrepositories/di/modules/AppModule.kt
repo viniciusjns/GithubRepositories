@@ -1,4 +1,4 @@
-package com.example.githubrepositories.di.app
+package com.example.githubrepositories.di.modules
 
 import android.app.Application
 import android.content.Context
