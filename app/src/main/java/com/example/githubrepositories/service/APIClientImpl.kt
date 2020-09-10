@@ -20,10 +20,7 @@ class APIClientImpl : APIClient {
 
         val original = chain.request()
         val originalHttpUrl = original.url()
-        val url = originalHttpUrl.newBuilder()
-            .addQueryParameter("limit", "100")
-            .build()
-
+        val url = originalHttpUrl.newBuilder().build()
         val requestBuilder = original.newBuilder().url(url)
         val request = requestBuilder.build()
 

@@ -13,11 +13,11 @@ open class NetworkModule {
 
     @Provides
     @Singleton
-    fun providesApiClient(): APIClient = APIClientImpl()
+    fun provideApiClient(): APIClient = APIClientImpl()
 
     @Singleton
     @Provides
-    fun providesHeroesService(retrofit: Retrofit): GithubService =
+    fun provideGithubService(retrofit: Retrofit): GithubService =
         retrofit.create(GithubService::class.java)
 
     @Provides

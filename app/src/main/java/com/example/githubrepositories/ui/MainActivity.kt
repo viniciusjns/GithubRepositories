@@ -13,12 +13,20 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
+    private val repoAdapter = RepoAdapter()
+
     override fun getViewModelClass(): Class<MainViewModel>? = MainViewModel::class.java
 
     override fun getLayout(): Int = R.layout.activity_main
 
     override fun init() {
-        viewModel.searchRepositories()
+//        viewModel.searchRepositories()
+
+        viewModel.reposPagedLiveData.observe(this, Observer {
+            repoAdapter.submitList(it)
+        })
+        actMain_Repos_rv.adapter = repoAdapter
+        actMain_Repos_rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         viewModel.reposLiveData.observe(this, Observer {
             when(it.status) {
@@ -40,8 +48,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     private fun setupList(repos: List<Repo>) {
-        val adapter = RepoAdapter(repos)
-        actMain_Repos_rv.adapter = adapter
-        actMain_Repos_rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+//        val adapter = RepoAdapter(repos)
+//        actMain_Repos_rv.adapter = adapter
+//        actMain_Repos_rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
     }
 }
