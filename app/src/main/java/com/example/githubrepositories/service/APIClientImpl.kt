@@ -19,7 +19,7 @@ class APIClientImpl : APIClient {
     private val requestIntercept = { chain: Interceptor.Chain ->
 
         val original = chain.request()
-        val originalHttpUrl = original.url()
+        val originalHttpUrl = original.url
         val url = originalHttpUrl.newBuilder().build()
         val requestBuilder = original.newBuilder().url(url)
         val request = requestBuilder.build()
