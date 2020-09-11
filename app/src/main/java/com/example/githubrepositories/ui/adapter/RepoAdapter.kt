@@ -5,13 +5,14 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubrepositories.R
 import com.example.githubrepositories.databinding.ItemRepoBinding
 import com.example.githubrepositories.model.Repo
 
-class RepoAdapter : PagedListAdapter<Repo, RepoAdapter.ViewHolder>(DiffUtilCallBack()) {
+class RepoAdapter : PagingDataAdapter<Repo, RepoAdapter.ViewHolder>(DiffUtilCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(

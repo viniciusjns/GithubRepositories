@@ -1,34 +1,24 @@
 package com.example.githubrepositories.ui.viewmodel
 
-import androidx.lifecycle.MutableLiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.githubrepositories.model.Repo
-import com.example.githubrepositories.model.Resource
 import com.example.githubrepositories.repository.MainRepository
+import com.example.githubrepositories.repository.datasource.RepoPagingSource
+import com.example.githubrepositories.service.GithubService
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    mainRepository: MainRepository
+    val service: GithubService
 ) : BaseViewModel() {
 
-    val reposLiveData = MutableLiveData<Resource<List<Repo>>>()
-
-    val reposPagedLiveData = mainRepository.searchPagedRepositories(
-        "language:kotlin", "stars"
-    )
-
-//    fun searchRepositories() {
-//        viewModelScope.launch {
-//            reposLiveData.value = Resource.loading()
-//            runCatching {
-//                val repos = mainRepository.searchRepositories(
-//                    "language:kotlin",
-//                    "stars"
-//                )
-//                reposLiveData.value = Resource.success(repos)
-//            }.onFailure {
-//                reposLiveData.value = Resource.error(it.message)
-//            }
-//        }
-//    }
+    fun getRepos(): Flow<PagingData<Repo>> = Pager(
+        config = PagingConfig(30)
+    ) {
+        RepoPagingSource(service, "language:kotlin", "stars")
+    }.flow.cachedIn(viewModelScope)
 
 }

@@ -1,4 +1,4 @@
-package com.example.githubrepositories.ui
+package com.example.githubrepositories.utils
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter

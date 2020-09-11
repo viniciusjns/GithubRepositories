@@ -96,6 +96,7 @@ dependencies {
     implementation baseDependencies.recycler_view
     implementation baseDependencies.constraint_layout
 
+    implementation "androidx.paging:paging-runtime:3.0.0-alpha06"
     implementation 'androidx.paging:paging-runtime:2.1.2'
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
 

@@ -1,15 +1,16 @@
 package com.example.githubrepositories.ui
 
-import androidx.lifecycle.Observer
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.githubrepositories.R
 import com.example.githubrepositories.databinding.ActivityMainBinding
-import com.example.githubrepositories.model.Repo
-import com.example.githubrepositories.model.Resource
 import com.example.githubrepositories.ui.adapter.RepoAdapter
 import com.example.githubrepositories.ui.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
@@ -20,36 +21,25 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     override fun getLayout(): Int = R.layout.activity_main
 
     override fun init() {
-//        viewModel.searchRepositories()
+        setupAdapter()
 
-        viewModel.reposPagedLiveData.observe(this, Observer {
-            repoAdapter.submitList(it)
-        })
-        actMain_Repos_rv.adapter = repoAdapter
-        actMain_Repos_rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
-        viewModel.reposLiveData.observe(this, Observer {
-            when(it.status) {
-                Resource.Status.LOADING -> {
-
-                }
-                Resource.Status.SUCCESS -> {
-                    it.data?.let {
-                            data -> setupList(data)
-                    } ?: run {
-
-                    }
-                }
-                else -> {
-
-                }
+        lifecycleScope.launch {
+            repoAdapter.loadStateFlow.collectLatest {
+                loading.isVisible = it.refresh is LoadState.Loading
             }
-        })
+        }
+
+        lifecycleScope.launch {
+            viewModel.getRepos().collectLatest {
+                repoAdapter.submitData(it)
+            }
+        }
+
     }
 
-    private fun setupList(repos: List<Repo>) {
-//        val adapter = RepoAdapter(repos)
-//        actMain_Repos_rv.adapter = adapter
-//        actMain_Repos_rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+    private fun setupAdapter() {
+        actMain_Repos_rv.adapter = repoAdapter
+        actMain_Repos_rv.layoutManager = LinearLayoutManager(this,
+            LinearLayoutManager.VERTICAL, false)
     }
 }
