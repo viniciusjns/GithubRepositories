@@ -4,6 +4,8 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
+import androidx.room.withTransaction
+import com.example.githubrepositories.dao.GithubDatabase
 import com.example.githubrepositories.dao.RepoDao
 import com.example.githubrepositories.model.Repo
 import com.example.githubrepositories.service.GithubService
@@ -13,9 +15,11 @@ import java.io.IOException
 @OptIn(ExperimentalPagingApi::class)
 class RepoRemoteMediator(
     private val query: String,
-    private val repoDao: RepoDao,
+    private val database: GithubDatabase,
     private val service: GithubService
 ) : RemoteMediator<Int, Repo>() {
+
+    private val repoDao = database.repoDao()
 
     override suspend fun load(
         loadType: LoadType,
@@ -28,7 +32,10 @@ class RepoRemoteMediator(
             // ID to let it continue from where it left off. For REFRESH,
             // pass null to load the first page.
             val page = when (loadType) {
-                LoadType.REFRESH -> 1
+                LoadType.REFRESH -> {
+                    val repo = getRepoClosestToCurrentPosition(state)
+                    if (repo != null) repo.primaryKey / pageSize else 1
+                }
                 // In this example, you never need to prepend, since REFRESH
                 // will always load the first page in the list. Immediately
                 // return, reporting end of pagination.
@@ -60,7 +67,7 @@ class RepoRemoteMediator(
                 page = page
             )
 
-//            database.withTransaction {
+            database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     repoDao.deleteAll()
                 }
@@ -69,7 +76,7 @@ class RepoRemoteMediator(
                 // current PagingData, allowing Paging to present the updates
                 // in the DB.
                 repoDao.insertAll(response.items)
-//            }
+            }
 
             val endOfPaginationReached = response.items.isEmpty()
             MediatorResult.Success(
@@ -79,6 +86,16 @@ class RepoRemoteMediator(
             MediatorResult.Error(e)
         } catch (e: HttpException) {
             MediatorResult.Error(e)
+        }
+    }
+
+    private suspend fun getRepoClosestToCurrentPosition(
+        state: PagingState<Int, Repo>
+    ): Repo? {
+        return state.anchorPosition?.let { position ->
+            state.closestItemToPosition(position)?.primaryKey?.let { repoId ->
+                repoDao.getRepoByPrimaryKey(repoId)
+            }
         }
     }
 }

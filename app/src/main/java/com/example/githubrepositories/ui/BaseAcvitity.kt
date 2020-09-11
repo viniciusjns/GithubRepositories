@@ -43,7 +43,7 @@ abstract class BaseActivity<V : ViewDataBinding, T : BaseViewModel> : AppCompatA
         binding.executePendingBindings()
 
         getViewModelClass()?.apply {
-            viewModel = ViewModelProviders.of(this@BaseActivity, mViewModelFactory).get(this)
+            viewModel = ViewModelProvider(this@BaseActivity, mViewModelFactory).get(this)
         }
 
         init()

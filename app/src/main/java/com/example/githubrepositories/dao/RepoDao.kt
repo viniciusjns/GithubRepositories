@@ -19,4 +19,7 @@ interface RepoDao {
     @Query("DELETE FROM github_repository")
     suspend fun deleteAll()
 
+    @Query("SELECT * FROM github_repository WHERE primaryKey = :id")
+    suspend fun getRepoByPrimaryKey(id: Int): Repo
+
 }

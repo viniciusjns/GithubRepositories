@@ -16,15 +16,28 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     private val service: GithubService,
-    private val repoDao: RepoDao
+    private val database: GithubDatabase
 ) : BaseViewModel() {
 
-    fun getRepos(): Flow<PagingData<Repo>> = Pager(
-        config = PagingConfig(30),
-        remoteMediator = RepoRemoteMediator("language:kotlin", repoDao, service)
-    ) {
+    private var currentQueryValue: String = ""
+    private var currentSearchResult: Flow<PagingData<Repo>>? = null
+
+    fun getRepos(query: String): Flow<PagingData<Repo>> {
 //        RepoPagingSource(service, "language:kotlin", "stars")
-        repoDao.getRepos()
-    }.flow.cachedIn(viewModelScope)
+        val lastResult = currentSearchResult
+        if (query == currentQueryValue && lastResult != null)
+            return lastResult
+        currentQueryValue = query
+
+        val newResult = Pager(
+            config = PagingConfig(30),
+            remoteMediator = RepoRemoteMediator(query, database, service)
+        ) {
+            database.repoDao().getRepos()
+        }.flow.cachedIn(viewModelScope)
+
+        currentSearchResult = newResult
+        return newResult
+    }
 
 }

@@ -30,7 +30,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         }
 
         lifecycleScope.launch {
-            viewModel.getRepos().collectLatest {
+            viewModel.getRepos("language:kotlin").collectLatest {
                 repoAdapter.submitData(it)
             }
         }
