@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">GithubRepositories</string>
+
+    <string name="actMain_with_paging">Com paging library</string>
+    <string name="actMain_without_paging">Sem paging library</string>
+    <string name="generic_error">Um erro inesperado aconteceu. Verifique sua conexão e tente novamente.</string>
 </resources>

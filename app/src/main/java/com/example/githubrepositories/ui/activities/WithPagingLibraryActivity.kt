@@ -31,14 +31,14 @@ class WithPagingLibraryActivity : BaseActivity<ActivityWithPagingLibraryBinding,
     private fun search() {
         lifecycleScope.launch {
             viewModel.getRepos("language:kotlin").collectLatest {
-                repoAdapter.submitData(it.map {
+                repoAdapter.submitData(it.map { entity ->
                     Repo(
-                        id = it.id,
-                        name = it.name,
-                        fullName = it.fullName,
-                        stars = it.stars,
-                        forks = it.forks,
-                        owner = it.owner
+                        id = entity.id,
+                        name = entity.name,
+                        fullName = entity.fullName,
+                        stars = entity.stars,
+                        forks = entity.forks,
+                        owner = entity.owner
                     )
                 })
             }
@@ -57,7 +57,7 @@ class WithPagingLibraryActivity : BaseActivity<ActivityWithPagingLibraryBinding,
                 // Only show the list if refresh succeeds.
                 actWithPaging_Repos_rv.isVisible = loadState.refresh is LoadState.NotLoading
                 // Show loading spinner during initial load or refresh.
-                loading.isVisible = loadState.refresh is LoadState.Loading
+                actWithPaging_loading_pb.isVisible = loadState.refresh is LoadState.Loading
                 // Show the retry state if initial load or refresh fails.
 //                retry_button.isVisible = loadState.refresh is LoadState.Error
 
@@ -70,7 +70,7 @@ class WithPagingLibraryActivity : BaseActivity<ActivityWithPagingLibraryBinding,
                 }
                 error?.let {
                     Toast.makeText(this@WithPagingLibraryActivity,
-                        "Um erro inesperado aconteceu. Verifique sua conexão e tente novamente.", Toast.LENGTH_LONG).show()
+                        getString(R.string.generic_error), Toast.LENGTH_LONG).show()
                     lifecycleScope.cancel(null)
                 }
             }

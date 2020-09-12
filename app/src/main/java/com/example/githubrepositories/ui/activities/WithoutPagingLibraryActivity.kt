@@ -21,14 +21,24 @@ class WithoutPagingLibraryActivity : BaseActivity<ActivityWithoutPagingLibraryBi
     override fun getLayout(): Int = R.layout.activity_without_paging_library
 
     override fun init() {
+        setupToolbar()
         setupAdapter()
+        observeLiveData()
+
         viewModel.searchRepos()
+    }
+
+    private fun observeLiveData() {
         viewModel.reposLiveData.observe(this, Observer {
             repoAdapter.submitList(it)
         })
         viewModel.isLoading.observe(this, Observer {
             actWithoutPaging_loading_pb.isVisible = it
         })
+    }
+
+    private fun setupToolbar() {
+        supportActionBar?.title = "Github Repositories"
     }
 
     private fun setupAdapter() {

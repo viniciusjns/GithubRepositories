@@ -1,6 +1,5 @@
 package com.example.githubrepositories.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.githubrepositories.model.Repo
 import com.example.githubrepositories.repository.MainRepository
