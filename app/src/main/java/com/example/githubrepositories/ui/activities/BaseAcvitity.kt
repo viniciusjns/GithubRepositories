@@ -1,4 +1,4 @@
-package com.example.githubrepositories.ui
+package com.example.githubrepositories.ui.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.example.githubrepositories.ui.viewmodel.BaseViewModel
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector

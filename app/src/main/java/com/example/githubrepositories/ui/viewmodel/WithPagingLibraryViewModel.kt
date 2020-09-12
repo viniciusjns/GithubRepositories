@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import com.example.githubrepositories.dao.GithubDatabase
 import com.example.githubrepositories.dao.RepoDao
 import com.example.githubrepositories.model.Repo
+import com.example.githubrepositories.model.RepoEntity
 import com.example.githubrepositories.repository.MainRepository
 import com.example.githubrepositories.repository.datasource.RepoPagingSource
 import com.example.githubrepositories.repository.datasource.RepoRemoteMediator
@@ -14,16 +15,15 @@ import com.example.githubrepositories.service.GithubService
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class MainViewModel @Inject constructor(
+class WithPagingLibraryViewModel @Inject constructor(
     private val service: GithubService,
     private val database: GithubDatabase
 ) : BaseViewModel() {
 
     private var currentQueryValue: String = ""
-    private var currentSearchResult: Flow<PagingData<Repo>>? = null
+    private var currentSearchResult: Flow<PagingData<RepoEntity>>? = null
 
-    fun getRepos(query: String): Flow<PagingData<Repo>> {
-//        RepoPagingSource(service, "language:kotlin", "stars")
+    fun getRepos(query: String): Flow<PagingData<RepoEntity>> {
         val lastResult = currentSearchResult
         if (query == currentQueryValue && lastResult != null)
             return lastResult
@@ -33,7 +33,7 @@ class MainViewModel @Inject constructor(
             config = PagingConfig(30),
             remoteMediator = RepoRemoteMediator(query, database, service)
         ) {
-            database.repoDao().getRepos()
+            database.repoDao().getPagingRepos()
         }.flow.cachedIn(viewModelScope)
 
         currentSearchResult = newResult

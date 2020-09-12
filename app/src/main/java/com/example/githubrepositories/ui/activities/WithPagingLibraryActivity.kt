@@ -1,4 +1,4 @@
-package com.example.githubrepositories.ui
+package com.example.githubrepositories.ui.activities
 
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -6,21 +6,22 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubrepositories.R
-import com.example.githubrepositories.databinding.ActivityMainBinding
-import com.example.githubrepositories.ui.adapter.RepoAdapter
-import com.example.githubrepositories.ui.viewmodel.MainViewModel
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.githubrepositories.databinding.ActivityWithPagingLibraryBinding
+import com.example.githubrepositories.model.Repo
+import com.example.githubrepositories.ui.adapter.RepoPagingAdapter
+import com.example.githubrepositories.ui.viewmodel.WithPagingLibraryViewModel
+import kotlinx.android.synthetic.main.activity_with_paging_library.*
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
+class WithPagingLibraryActivity : BaseActivity<ActivityWithPagingLibraryBinding, WithPagingLibraryViewModel>() {
 
-    private val repoAdapter = RepoAdapter()
+    private val repoAdapter = RepoPagingAdapter()
 
-    override fun getViewModelClass(): Class<MainViewModel>? = MainViewModel::class.java
+    override fun getViewModelClass(): Class<WithPagingLibraryViewModel>? = WithPagingLibraryViewModel::class.java
 
-    override fun getLayout(): Int = R.layout.activity_main
+    override fun getLayout(): Int = R.layout.activity_with_paging_library
 
     override fun init() {
         setupAdapter()
@@ -30,14 +31,23 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     private fun search() {
         lifecycleScope.launch {
             viewModel.getRepos("language:kotlin").collectLatest {
-                repoAdapter.submitData(it)
+                repoAdapter.submitData(it.map {
+                    Repo(
+                        id = it.id,
+                        name = it.name,
+                        fullName = it.fullName,
+                        stars = it.stars,
+                        forks = it.forks,
+                        owner = it.owner
+                    )
+                })
             }
         }
     }
 
     private fun setupAdapter() {
-        actMain_Repos_rv.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
+        actWithPaging_Repos_rv.apply {
+            layoutManager = LinearLayoutManager(this@WithPagingLibraryActivity)
             setHasFixedSize(true)
             adapter = repoAdapter
         }
@@ -45,7 +55,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         lifecycleScope.launch {
             repoAdapter.loadStateFlow.collectLatest { loadState ->
                 // Only show the list if refresh succeeds.
-                actMain_Repos_rv.isVisible = loadState.refresh is LoadState.NotLoading
+                actWithPaging_Repos_rv.isVisible = loadState.refresh is LoadState.NotLoading
                 // Show loading spinner during initial load or refresh.
                 loading.isVisible = loadState.refresh is LoadState.Loading
                 // Show the retry state if initial load or refresh fails.
@@ -59,11 +69,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     else -> null
                 }
                 error?.let {
-                    Toast.makeText(this@MainActivity,
+                    Toast.makeText(this@WithPagingLibraryActivity,
                         "Um erro inesperado aconteceu. Verifique sua conexão e tente novamente.", Toast.LENGTH_LONG).show()
                     lifecycleScope.cancel(null)
                 }
             }
         }
     }
+
 }

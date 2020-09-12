@@ -8,6 +8,7 @@ import androidx.room.withTransaction
 import com.example.githubrepositories.dao.GithubDatabase
 import com.example.githubrepositories.dao.RepoDao
 import com.example.githubrepositories.model.Repo
+import com.example.githubrepositories.model.RepoEntity
 import com.example.githubrepositories.service.GithubService
 import retrofit2.HttpException
 import java.io.IOException
@@ -17,13 +18,13 @@ class RepoRemoteMediator(
     private val query: String,
     private val database: GithubDatabase,
     private val service: GithubService
-) : RemoteMediator<Int, Repo>() {
+) : RemoteMediator<Int, RepoEntity>() {
 
     private val repoDao = database.repoDao()
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, Repo>
+        state: PagingState<Int, RepoEntity>
     ): MediatorResult {
         return try {
             val pageSize = state.config.pageSize
@@ -75,7 +76,16 @@ class RepoRemoteMediator(
                 // Insert new users into database, which invalidates the
                 // current PagingData, allowing Paging to present the updates
                 // in the DB.
-                repoDao.insertAll(response.items)
+                repoDao.insertAll(response.items.map {
+                    RepoEntity(
+                        id = it.id,
+                        name = it.name,
+                        fullName = it.fullName,
+                        stars = it.stars,
+                        forks = it.forks,
+                        owner = it.owner
+                    )
+                })
             }
 
             val endOfPaginationReached = response.items.isEmpty()
@@ -90,8 +100,8 @@ class RepoRemoteMediator(
     }
 
     private suspend fun getRepoClosestToCurrentPosition(
-        state: PagingState<Int, Repo>
-    ): Repo? {
+        state: PagingState<Int, RepoEntity>
+    ): RepoEntity? {
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.primaryKey?.let { repoId ->
                 repoDao.getRepoByPrimaryKey(repoId)

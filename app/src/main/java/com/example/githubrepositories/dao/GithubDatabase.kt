@@ -4,11 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.githubrepositories.model.Owner
-import com.example.githubrepositories.model.Repo
+import com.example.githubrepositories.model.RepoEntity
 
 @Database(
-    entities = [Repo::class],
+    entities = [RepoEntity::class],
     version = 1,
     exportSchema = false
 )

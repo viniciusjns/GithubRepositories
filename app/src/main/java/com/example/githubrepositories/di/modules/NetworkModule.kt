@@ -3,6 +3,7 @@ package com.example.githubrepositories.di.modules
 import com.example.githubrepositories.service.APIClient
 import com.example.githubrepositories.service.APIClientImpl
 import com.example.githubrepositories.service.GithubService
+import com.example.githubrepositories.utils.Constants
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -23,6 +24,6 @@ open class NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(apiClient: APIClient): Retrofit =
-        apiClient.configure("https://api.github.com/")
+        apiClient.configure(Constants.BASE_URL)
 
 }

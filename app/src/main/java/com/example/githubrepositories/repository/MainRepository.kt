@@ -1,6 +1,7 @@
 package com.example.githubrepositories.repository
 
 import com.example.githubrepositories.model.Repo
+import com.example.githubrepositories.model.Resource
 
 interface MainRepository {
 
