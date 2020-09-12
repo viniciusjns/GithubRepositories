@@ -3,5 +3,7 @@
 
     <string name="actMain_with_paging">Com paging library</string>
     <string name="actMain_without_paging">Sem paging library</string>
+    <string name="actWithoutPaging_empty_list">Você não possui dados para serem visualizados</string>
+
     <string name="generic_error">Um erro inesperado aconteceu. Verifique sua conexão e tente novamente.</string>
 </resources>

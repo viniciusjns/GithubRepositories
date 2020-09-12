@@ -6,7 +6,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/ic_pinned_octocat"/>
+            android:src="@drawable/octocat"/>
     </item>
 
 </layer-list>

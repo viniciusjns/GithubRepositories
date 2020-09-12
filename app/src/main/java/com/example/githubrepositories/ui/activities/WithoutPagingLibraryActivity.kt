@@ -1,5 +1,6 @@
 package com.example.githubrepositories.ui.activities
 
+import android.view.View
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +31,10 @@ class WithoutPagingLibraryActivity : BaseActivity<ActivityWithoutPagingLibraryBi
 
     private fun observeLiveData() {
         viewModel.reposLiveData.observe(this, Observer {
+            if (it.isEmpty())
+                actWithoutPaging_emptyList_cl.visibility = View.VISIBLE
+            else
+                actWithoutPaging_emptyList_cl.visibility = View.GONE
             repoAdapter.submitList(it)
         })
         viewModel.isLoading.observe(this, Observer {
