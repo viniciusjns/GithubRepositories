@@ -43,7 +43,7 @@ class WithoutPagingLibraryActivity : BaseActivity<ActivityWithoutPagingLibraryBi
     }
 
     private fun setupToolbar() {
-        supportActionBar?.title = "Github Repositories"
+        supportActionBar?.title = getString(R.string.app_name)
     }
 
     private fun setupAdapter() {

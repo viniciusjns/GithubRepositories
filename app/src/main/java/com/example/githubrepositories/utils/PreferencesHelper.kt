@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.example.githubrepositories.GithubRepositoriesApplication
 
-class PreferencesHelper {
+open class PreferencesHelper {
 
     private val TAG = PreferencesHelper::class.simpleName
 

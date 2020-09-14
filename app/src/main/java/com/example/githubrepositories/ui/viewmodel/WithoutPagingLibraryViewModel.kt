@@ -13,32 +13,24 @@ class WithoutPagingLibraryViewModel @Inject constructor(
     private val preferencesHelper: PreferencesHelper
 ) : BaseViewModel() {
 
-    var currentPage: Int = 1
+    private var currentPage: Int = 1
     val isLoading = MutableLiveData<Boolean>(false)
     val reposLiveData = MutableLiveData<List<Repo>>(mutableListOf())
-    private val tempList = mutableListOf<Repo>()
 
     fun searchRepos() {
         isLoading.value = true
-        getPage()?.let {
-            currentPage = it
-            viewModelScope.launch {
-                val result = mainRepository.searchRepositories(
-                    "language:kotlin",
-                    "sort",
-                    currentPage
-                )
+        getPage()?.let { currentPage = it }
+        viewModelScope.launch {
+            val result = mainRepository.searchRepositories(
+                "language:kotlin",
+                "stars",
+                currentPage
+            )
 
-                if (tempList.isEmpty()) {
-                    reposLiveData.value = result
-                } else {
-                    if (tempList != result) {
-                        reposLiveData.value = result
-                    }
-                }
+            if (reposLiveData.value != result)
+                reposLiveData.value = result
 
-                isLoading.value = false
-            }
+            isLoading.value = false
         }
     }
 

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.githubrepositories.utils.PreferencesHelper
+import com.example.githubrepositories.utils.RepoMapper
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -20,4 +21,9 @@ open class AppModule {
     @Singleton
     fun providePreferencesHelper(): PreferencesHelper =
         PreferencesHelper()
+
+    @Provides
+    @Singleton
+    fun provideRepoMapper(): RepoMapper =
+        RepoMapper()
 }

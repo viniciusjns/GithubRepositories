@@ -1,17 +1,18 @@
 package com.example.githubrepositories.repository
 
-import com.example.githubrepositories.dao.GithubDatabase
+import com.example.githubrepositories.dao.RepoDao
 import com.example.githubrepositories.model.Repo
-import com.example.githubrepositories.model.RepoEntity
 import com.example.githubrepositories.service.GithubService
 import com.example.githubrepositories.utils.Constants.CURRENT_PAGE_PREF
 import com.example.githubrepositories.utils.PreferencesHelper
+import com.example.githubrepositories.utils.RepoMapper
 import javax.inject.Inject
 
 class MainRepositoryImpl @Inject constructor(
     private val service: GithubService,
-    private val database: GithubDatabase,
-    private val preferencesHelper: PreferencesHelper
+    private val repoDao: RepoDao,
+    private val preferencesHelper: PreferencesHelper,
+    private val mapper: RepoMapper
 ) : MainRepository {
 
     override suspend fun searchRepositories(query: String,
@@ -22,37 +23,11 @@ class MainRepositoryImpl @Inject constructor(
         }.getOrNull()
 
         return if (result == null) {
-            database.repoDao().getRepos().map {
-                Repo(
-                    id = it.id,
-                    name = it.name,
-                    fullName = it.fullName,
-                    stars = it.stars,
-                    forks = it.forks,
-                    owner = it.owner
-                )
-            }
+            mapper.transformRepoEntitytoRepo(repoDao.getRepos())
         } else {
-            val datas: MutableList<Repo> = database.repoDao().getRepos().map {
-                Repo(
-                    id = it.id,
-                    name = it.name,
-                    fullName = it.fullName,
-                    stars = it.stars,
-                    forks = it.forks,
-                    owner = it.owner
-                )
-            } as MutableList
-            database.repoDao().insertAll(result.map {
-                RepoEntity(
-                    id = it.id,
-                    name = it.name,
-                    fullName = it.fullName,
-                    stars = it.stars,
-                    forks = it.forks,
-                    owner = it.owner
-                )
-            })
+            val datas: MutableList<Repo> =
+                mapper.transformRepoEntitytoRepo(repoDao.getRepos()) as MutableList
+            repoDao.insertAll(mapper.transformRepoToEntity(result))
             preferencesHelper.saveInteger(page.plus(1), CURRENT_PAGE_PREF)
             datas.addAll(result)
             datas

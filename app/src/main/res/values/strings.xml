@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GithubRepositories</string>
+    <string name="app_name">Github Repositories</string>
 
     <string name="actMain_with_paging">Com paging library</string>
     <string name="actMain_without_paging">Sem paging library</string>
