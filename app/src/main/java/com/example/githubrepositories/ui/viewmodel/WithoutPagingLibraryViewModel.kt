@@ -15,7 +15,11 @@ class WithoutPagingLibraryViewModel @Inject constructor(
 
     private var currentPage: Int = 1
     val isLoading = MutableLiveData<Boolean>(false)
-    val reposLiveData = MutableLiveData<List<Repo>>(mutableListOf())
+    var reposLiveData: MutableLiveData<List<Repo>> = MutableLiveData(mutableListOf())
+
+    init {
+        searchRepos()
+    }
 
     fun searchRepos() {
         isLoading.value = true

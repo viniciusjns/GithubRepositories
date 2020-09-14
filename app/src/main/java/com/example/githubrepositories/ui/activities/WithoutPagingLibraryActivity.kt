@@ -25,8 +25,6 @@ class WithoutPagingLibraryActivity : BaseActivity<ActivityWithoutPagingLibraryBi
         setupToolbar()
         setupAdapter()
         observeLiveData()
-
-        viewModel.searchRepos()
     }
 
     private fun observeLiveData() {
